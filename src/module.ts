@@ -54,7 +54,7 @@ export default defineNuxtModule<ModuleOptions>({
     forward: [],
     lib: '~partytown',
   }),
-  async setup (options, nuxt) {
+  async setup(options, nuxt) {
     // Normalize partytown configuration
     const fns = ['resolveUrl', 'get', 'set', 'apply']
     options.lib = withLeadingSlash(withTrailingSlash(options.lib))
@@ -82,8 +82,23 @@ export default defineNuxtModule<ModuleOptions>({
       // Use @vueuse/head syntax to inject scripts
       nuxt.options.app.head.script = nuxt.options.app.head.script || []
       nuxt.options.app.head.script.unshift(
-        { children: `partytown = ${renderedConfig}` },
-        { children: partytownSnippet }
+        {
+          key: 'partytown-config', // added key
+          innerHTML: `partytown = ${renderedConfig}`, // children is deprecated
+
+          // added properties for UnJS Unhead (and Capo.js ?)
+          tagPosition: 'head',
+          // https://unhead.unjs.io/usage/guides/sorting#critical-tags
+          tagPriority: 21, // after <link rel="preconnect" ...> but before the others <script> tags
+        },
+        {
+          key: 'partytown-snippet', // added key
+          innerHTML: partytownSnippet, // children is deprecated
+
+          // added properties for UnJS Unhead (and Capo.js ?)
+          tagPosition: 'head',
+          tagPriority: 'after:partytown-config',
+        }
       )
     }
 
