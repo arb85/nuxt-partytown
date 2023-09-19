@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/partytown'],
+  modules: ['@nuxtjs/partytown', '@nuxtseo/module'],
   app: {
     head: {
       script: [{ src: '/test-script.js', type: 'text/partytown' }],
@@ -7,5 +7,9 @@ export default defineNuxtConfig({
   },
   partytown: {
     //
+  },
+
+  experimental: {
+    headNext: true,
   },
 })
